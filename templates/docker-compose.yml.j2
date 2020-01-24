@@ -1,0 +1,35 @@
+---
+
+version: '3.5'
+
+{% if traefik.container.network|default(False) %}
+networks:
+  {{ traefik.container.network.name }}
+    external: true
+{% endif %}
+
+services:
+  server:
+    image: {{ traefik.container.image }}
+    container_name: {{ traefik.container.name }}
+    hostname: {{ ansible_hostname }}
+{% if traefik.container.dns|default(False) %}
+    dns: {{ traefik.container.dns }}
+{% endif%}
+{% if traefik.container.syslog.enabled %}
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "{{ traefik.container.syslog.host }}"
+        tag: {{ traefik.container.syslog.tag }}
+{% endif %}
+{% if traefik.container.network|default(False) %}
+    networks:
+      - {{ traefik.container.network.name }}
+{% endif %}
+    ports:
+      - {{ traefik.host }}:{{ traefik.port }}:80
+      - {{ traefik.exporter.host }}:{{ traefik.exporter.port }}:8080
+    volumes:
+      - ./traefik.yml:/etc/traefik/traefik.yaml
+      - /var/run/docker.sock:/var/run/docker.sock:ro

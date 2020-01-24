@@ -1,0 +1,31 @@
+entryPoints:
+  web:
+    address: :80
+  metrics:
+    address: :8080
+
+providers:
+  docker: {}
+
+{% if traefik.consul.enabled|default(False) %}
+  consulCatalog:
+    endpoint:
+      address: http://{{ traefik.consul.host }}:{{ traefik.consul.port }}
+{% endif %}
+
+api:
+  dashboard: true
+  insecure: true
+
+log:
+  level: DEBUG
+
+metrics:
+  prometheus:
+    addEntryPointsLabels: true
+    entryPoint: metrics
+    buckets:
+      - 0.1
+      - 0.3
+      - 1.2
+      - 5.0

@@ -1,0 +1,15 @@
+---
+
+- name: Prepare folders
+  file: path={{ item }} state=directory
+  with_items:
+    - "{{ traefik.service_dir }}"
+
+- name: Assemble config files
+  template: src={{ item.src }}.j2 dest={{ item.dest }}
+  with_items:
+    - src: docker-compose.yml
+      dest: "{{ traefik.service_dir }}/docker-compose.yml"
+    - src: traefik.yml
+      dest: "{{ traefik.service_dir }}/traefik.yml"
+  notify: restart traefik

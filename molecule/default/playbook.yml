@@ -1,0 +1,49 @@
+---
+
+- name: Converge
+  hosts: all
+  become: true
+
+  vars:
+    env: develop
+
+    services_dir: /opt/services
+
+    private_network: "{{ ansible_eth0['ipv4'] }}"
+
+    traefik:
+      service: traefik.service.consul
+
+      service_dir: "{{ services_dir }}/traefik"
+
+      host: "{{ private_network.address }}"
+      port: 80
+
+      consul:
+        enabled: false
+        host: consul.service.consul
+        port: 8500
+
+      container:
+        image: traefik
+        name: traefik
+        restart: always
+        network: ''
+
+        syslog:
+          enabled: false
+          host: unixgram:///dev/log
+          tag: traefik
+
+      exporter:
+        enabled: false
+
+        host: "{{ private_network.address }}"
+        port: 8080
+
+  roles:
+    - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}"
+
+  tasks:
+    - name: Install test requirements
+      apt: name=curl

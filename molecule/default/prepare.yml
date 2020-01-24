@@ -1,0 +1,27 @@
+---
+
+  - name: Prepare
+    hosts: all
+    become: true
+
+    vars:
+      env: develop
+
+      services_dir: /opt/services
+
+      private_network: "{{ ansible_eth0['ipv4'] }}"
+
+    roles:
+      - role: docker
+
+    tasks:
+      - name: Set storage-driver to vfs via daemon.json
+        copy:
+          content: |
+            {
+              "storage-driver": "vfs"
+            }
+          dest: /etc/docker/daemon.json
+
+      - name: Restart docker
+        systemd: state=restarted name=docker

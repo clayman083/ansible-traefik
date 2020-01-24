@@ -1,0 +1,7 @@
+---
+
+- name: Restart service
+  command: docker-compose up -d
+  args:
+    chdir: "{{ traefik.service_dir }}"
+  listen: restart traefik

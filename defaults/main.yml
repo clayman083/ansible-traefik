@@ -1,0 +1,27 @@
+---
+
+traefik:
+  service: traefik.service.consul
+
+  service_dir: "{{ services_dir }}/traefik"
+
+  host: "{{ private_network.address }}"
+  port: 8080
+
+  container:
+    image: traefik
+    name: traefik
+    restart: always
+    network: ''
+    dns: ''
+
+    syslog:
+      enabled: false
+      host: unixgram:///dev/log
+      tag: traefik
+
+  exporter:
+    enabled: false
+
+    host: "{{ private_network.address }}"
+    port: 8080
