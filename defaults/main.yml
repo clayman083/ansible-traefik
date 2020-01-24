@@ -8,6 +8,10 @@ traefik:
   host: "{{ private_network.address }}"
   port: 8080
 
+  api:
+    host: "{{ private_network.address }}"
+    port: 8081
+
   container:
     image: traefik
     name: traefik

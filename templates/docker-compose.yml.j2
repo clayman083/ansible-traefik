@@ -29,6 +29,7 @@ services:
 {% endif %}
     ports:
       - {{ traefik.host }}:{{ traefik.port }}:80
+      - {{ traefik.api.host }}:{{ traefik.api.port }}:8080
       - {{ traefik.exporter.host }}:{{ traefik.exporter.port }}:8082
     volumes:
       - ./traefik.yml:/etc/traefik/traefik.yaml
