@@ -4,6 +4,15 @@
   file: path={{ item }} state=directory
   with_items:
     - "{{ traefik.service_dir }}"
+    - "{{ traefik.certs_dir }}"
+    - "{{ traefik.conf_dir }}"
+
+- name: Assemble certificates files
+  template: src={{ item.src }}.j2 dest={{ item.dest }}
+  with_items:
+    - src: docker-compose.yml
+      dest: "{{ traefik.service_dir }}/docker-compose.yml"
+  when: traefik.certificates|default(False)
 
 - name: Assemble config files
   template: src={{ item.src }}.j2 dest={{ item.dest }}

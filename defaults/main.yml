@@ -5,8 +5,14 @@ traefik:
 
   service_dir: "{{ services_dir }}/traefik"
 
-  host: "{{ private_network.address }}"
-  port: 8080
+  entrypoints:
+    insecure:
+      host: "{{ public_network.address }}"
+      port: 80
+    secure:
+      host: "{{ public_network.address }}"
+      port: 443
+    traefik:
 
   api:
     host: "{{ private_network.address }}"
@@ -23,6 +29,8 @@ traefik:
       enabled: false
       host: unixgram:///dev/log
       tag: traefik
+
+  certificates: []
 
   exporter:
     enabled: false

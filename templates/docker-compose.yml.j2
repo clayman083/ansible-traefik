@@ -28,9 +28,12 @@ services:
       - {{ traefik.container.network.name }}
 {% endif %}
     ports:
-      - {{ traefik.host }}:{{ traefik.port }}:80
+      - {{ traefik.entrypoints.insecure.host }}:{{ traefik.entrypoints.insecure.port }}:80
+      - {{ traefik.entrypoints.secure.host }}:{{ traefik.entrypoints.secure.port }}:443
       - {{ traefik.api.host }}:{{ traefik.api.port }}:8080
       - {{ traefik.exporter.host }}:{{ traefik.exporter.port }}:8082
     volumes:
       - ./traefik.yml:/etc/traefik/traefik.yaml
+      - ./certs:/etc/traefik/certs
+      - ./conf.d:/etc/traefik/conf.d
       - /var/run/docker.sock:/var/run/docker.sock:ro
