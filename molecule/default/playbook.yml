@@ -10,6 +10,7 @@
     services_dir: /opt/services
 
     private_network: "{{ ansible_eth0['ipv4'] }}"
+    public_network: "{{ ansible_eth0['ipv4'] }}"
 
     traefik:
       service: traefik.service.consul
