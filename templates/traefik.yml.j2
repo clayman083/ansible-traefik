@@ -18,12 +18,14 @@ providers:
     exposedByDefault: false
 {% endif %}
 
+accessLog: {}
+
 api:
   dashboard: true
   insecure: true
 
 log:
-  level: DEBUG
+  level: INFO
 
 metrics:
   prometheus:

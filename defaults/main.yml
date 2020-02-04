@@ -4,6 +4,8 @@ traefik:
   service: traefik.service.consul
 
   service_dir: "{{ services_dir }}/traefik"
+  certs_dir: "{{ services_dir }}/traefik/certs"
+  conf_dir: "{{ services_dir }}/traefik/conf.d"
 
   entrypoints:
     insecure:
@@ -18,12 +20,17 @@ traefik:
     host: "{{ private_network.address }}"
     port: 8081
 
+  consul:
+    enabled: false
+    host: "{{ private_network.address }}"
+    port: 8500
+
   container:
     image: traefik
     name: traefik
     restart: always
     network: ''
-    dns: ''
+    dns: '{{ private_network.address }}'
 
     syslog:
       enabled: false
