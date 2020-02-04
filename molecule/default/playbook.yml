@@ -10,11 +10,14 @@
     services_dir: /opt/services
 
     private_network: "{{ ansible_eth0['ipv4'] }}"
+    public_network: "{{ ansible_eth0['ipv4'] }}"
 
     traefik:
       service: traefik.service.consul
 
       service_dir: "{{ services_dir }}/traefik"
+      certs_dir: "{{ services_dir }}/traefik/certs"
+      conf_dir: "{{ services_dir }}/traefik/conf.d"
 
       host: "{{ private_network.address }}"
       port: 80
@@ -36,7 +39,7 @@
           tag: traefik
 
       exporter:
-        enabled: false
+        enabled: yes
 
         host: "{{ private_network.address }}"
         port: 8080
