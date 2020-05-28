@@ -1,13 +1,6 @@
 ---
 
-{% if traefik.certificates|default(False) %}
 tls:
   certificates:
-{% for certificate in traefik.certificates %}
-    - certFile: {{ certificate.cert }}
-      keyFile: {{ certificate.key }}
-      stores:
-        - default
-
-{% endfor %}
-{% endif %}
+    - certFile: {{ item.cert.path }}
+      keyFile: {{ item.key.path }}

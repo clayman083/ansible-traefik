@@ -1,0 +1,14 @@
+---
+
+- name: Upload keys
+  copy: src={{ item.key.src }} dest={{ item.key.dest }}
+  with_items: "{{ certificates }}"
+
+- name: Upload certificates
+  copy: src={{ item.cert.src }} dest={{ item.cert.dest }}
+  with_items: "{{ certificates }}"
+
+- name: Assemble certificates files
+  template: src=certificates.yml.j2 dest="{{ traefik.conf_dir }}/{{ item.name }}.yml"
+  with_items: "{{ certificates }}"
+  notify: restart traefik

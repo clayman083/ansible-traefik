@@ -2,10 +2,12 @@
 
 version: '3.5'
 
-{% if traefik.container.network|default(False) %}
+{% if traefik.container.networks|default(False) %}
 networks:
-  {{ traefik.container.network.name }}
+{% for network in traefik.container.networks|default([]) %}
+  {{ network.name }}:
     external: true
+{% endfor %}
 {% endif %}
 
 services:
@@ -16,6 +18,12 @@ services:
 {% if traefik.container.dns|default(False) %}
     dns: {{ traefik.container.dns }}
 {% endif%}
+{% if traefik.container.labels|default(False) %}
+    labels:
+{% for label in traefik.container.labels|default([]) %}
+      - {{ label }}
+{% endfor %}
+{% endif %}
 {% if traefik.container.syslog.enabled %}
     logging:
       driver: syslog
@@ -23,15 +31,18 @@ services:
         syslog-address: "{{ traefik.container.syslog.host }}"
         tag: {{ traefik.container.syslog.tag }}
 {% endif %}
-{% if traefik.container.network|default(False) %}
+{% if traefik.container.networks|default(False) %}
     networks:
-      - {{ traefik.container.network.name }}
+{% for network in traefik.container.networks|default([]) %}
+      - {{ network.name }}
+{% endfor %}
 {% endif %}
     ports:
       - {{ traefik.entrypoints.insecure.host }}:{{ traefik.entrypoints.insecure.port }}:80
       - {{ traefik.entrypoints.secure.host }}:{{ traefik.entrypoints.secure.port }}:443
       - {{ traefik.api.host }}:{{ traefik.api.port }}:8080
       - {{ traefik.exporter.host }}:{{ traefik.exporter.port }}:8082
+    restart: {{ traefik.container.restart }}
     volumes:
       - ./traefik.yml:/etc/traefik/traefik.yaml
       - ./certs:/etc/traefik/certs

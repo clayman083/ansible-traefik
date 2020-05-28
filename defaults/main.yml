@@ -28,9 +28,10 @@ traefik:
   container:
     image: traefik
     name: traefik
-    restart: always
-    network: ''
     dns: '{{ private_network.address }}'
+    networks: []
+    labels: []
+    restart: always
 
     syslog:
       enabled: false
